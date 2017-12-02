@@ -1,4 +1,4 @@
-package com.berstek.paywiz.views.account_setup;
+package com.berstek.veripay.views.account_setup;
 
 
 import android.animation.AnimatorSet;
@@ -19,7 +19,6 @@ import com.berstek.veripay.R;
 import com.berstek.veripay.callbacks.OnUserQueriedListener;
 import com.berstek.veripay.models.User;
 import com.berstek.veripay.utils.CustomAnimator;
-import com.berstek.veripay.views.account_setup.EditUserInfoActivity;
 import com.berstek.veripay.views.home.HomeActivity;
 import com.bumptech.glide.Glide;
 
