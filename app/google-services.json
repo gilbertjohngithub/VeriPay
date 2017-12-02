@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "766287631612-ch37k982al324eajrb2uf5u6694as5cl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.berstek.veripay",
+            "certificate_hash": "5844178e1ba581c787a694ff93427c8937314c6d"
+          }
+        },
+        {
           "client_id": "766287631612-kf71993b52id607ap24ncdno3dre9j17.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
