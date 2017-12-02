@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         if (auth.getCurrentUser() == null)
             //redirect to login page
             getSupportFragmentManager().beginTransaction().
-                    add(R.id.main_container, new LoginSignupFragment()).commit();
+                    replace(R.id.main_container, new LoginSignupFragment()).commit();
         else {
             //TODO display welcome screen
         }
