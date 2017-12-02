@@ -138,12 +138,11 @@
             android:layout_marginStart="48dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/oval"
-            android:backgroundTint="@color/colorPrimary"
             android:padding="4dp"
             android:text="LBC Express"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
-            android:textStyle="bold|italic"
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Courier" />
 
@@ -168,6 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/oval"
             android:padding="4dp"
             android:text="2GO"
             android:textColor="@color/colorPrimary"
