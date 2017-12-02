@@ -10,7 +10,7 @@
         android:id="@+id/form_signup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="@color/colorPrimary"
         android:visibility="gone">
 
         <ImageView
@@ -141,7 +141,7 @@
         android:id="@+id/form_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
+        android:background="@android:color/white"
         android:visibility="visible">
 
         <ImageView
