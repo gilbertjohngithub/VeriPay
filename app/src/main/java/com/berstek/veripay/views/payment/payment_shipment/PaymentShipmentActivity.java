@@ -1,24 +1,38 @@
 package com.berstek.veripay.views.payment.payment_shipment;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
 import com.berstek.veripay.R;
 import com.berstek.veripay.callbacks.ConfirmationDialogListener;
+import com.berstek.veripay.data_access.TestDA;
 import com.berstek.veripay.data_access.TransactionDA;
 import com.berstek.veripay.models.Transaction;
+import com.berstek.veripay.utils.FileUploader;
+import com.berstek.veripay.utils.IntentMarker;
 import com.berstek.veripay.utils.UserUtils;
 import com.berstek.veripay.views.home.HomeActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.UploadTask;
 
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PaymentShipmentActivity extends AppCompatActivity
         implements PSPage1.PSPage1Listener, PSPage2.OnPage2ReadyListener,
-        ConfirmationDialogListener {
+        ConfirmationDialogListener, PSPage1.OnUploadStartedListener {
 
     /*
     PAYMENT FLOW
@@ -33,12 +47,19 @@ public class PaymentShipmentActivity extends AppCompatActivity
     private String receiver_uid;
     private PSConfirmationDialogFragment dialogFragment;
 
+    private UploadTask uploadTask;
+    private FileUploader uploader;
+    private ArrayList<String> imgUrls;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_shipment);
 
+        imgUrls = new ArrayList<>();
+
         transactionDA = new TransactionDA();
+        uploader = new FileUploader();
 
         receiver_uid = getIntent().getExtras().getString("receiver_uid");
 
@@ -100,8 +121,62 @@ public class PaymentShipmentActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+
     @Override
     public void onCancel() {
         dialogFragment.dismiss();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        new TestDA().writeToConsole1("UPLOADING FILE NICE");
+
+        if (requestCode == IntentMarker.RC_OPEN_FILE) {
+            ContentResolver cr = getContentResolver();
+            InputStream is;
+            try {
+                is = cr.openInputStream(data.getData());
+                final double size = is.available();
+
+                uploadTask = uploader.uploadFile
+                        (data, PaymentShipmentActivity.this);
+
+                if (uploadTask != null) {
+                    uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot snapshot) {
+                            @SuppressWarnings("VisibleForTests") Uri downloadURL = snapshot.getDownloadUrl();
+                            transaction.getImg_urls().add(downloadURL.toString());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            new TestDA().writeToConsole1("UPLOAD FAILED");
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot snapshot) {
+                            @SuppressWarnings("VisibleForTests")
+                            long bytesTransferred = snapshot.getBytesTransferred();
+                            double percentage = (bytesTransferred / size) * 100;
+                            DecimalFormat decimalFormat = new DecimalFormat("0");
+
+
+                        }
+                    });
+
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void onUploadStarted() {
+        uploader.openFileChooser(this);
     }
 }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.berstek.veripay.MainActivity;
 import com.berstek.veripay.R;
+import com.berstek.veripay.data_access.TestDA;
 import com.berstek.veripay.data_access.UserDA;
 import com.berstek.veripay.models.Contact;
 import com.berstek.veripay.models.User;
@@ -50,6 +51,8 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        new TestDA().writeToConsole1("HOME ACTIVITY");
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
