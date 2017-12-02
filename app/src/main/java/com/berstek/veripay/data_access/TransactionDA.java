@@ -22,7 +22,7 @@ public class TransactionDA extends DA {
     }
 
     public Query queryTransactionsByReceiver(String receiverUID) {
-        return rootRef.child(node).orderByChild("sender_uid").equalTo(receiverUID);
+        return rootRef.child(node).orderByChild("receiver_uid").equalTo(receiverUID);
 
     }
 
