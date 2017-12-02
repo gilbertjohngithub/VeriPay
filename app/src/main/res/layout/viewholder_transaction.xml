@@ -21,12 +21,12 @@
         android:elevation="0dp">
 
         <ImageView
-            android:tint="@color/custom_blur_tint"
-            android:src="@drawable/emma"
             android:id="@+id/recview_images"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_avatar"
+            android:tint="@color/custom_blur_tint"
             app:layout_constraintBottom_toBottomOf="@+id/transaction_code"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -198,7 +198,7 @@
             android:layout_height="35dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/ic_placeholder"
+            android:src="@drawable/ic_avatar"
             app:layout_constraintTop_toTopOf="parent"
             card_view:civ_border_color="#FF000000"
             card_view:civ_border_width="0dp"
