@@ -8,16 +8,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.berstek.veripay.R;
 import com.berstek.veripay.data_access.TestDA;
 import com.berstek.veripay.utils.FileUploader;
 import com.berstek.veripay.utils.IntentMarker;
+import com.berstek.veripay.views.home.HomeActivity;
 import com.berstek.veripay.views.parent_layouts.FragmentWithBackAndNext;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,17 +38,18 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PSPage1 extends FragmentWithBackAndNext implements View.OnClickListener {
+public class PSPage1 extends FragmentWithBackAndNext
+        implements View.OnClickListener {
 
     private PSPage1Listener inputListener;
     private OnUploadStartedListener onUploadStartedListener;
-
+    private ProductImagesAdapter adapter;
 
     private EditText price, title, details;
     private Button uploadBtn, nextBtn;
+    private TextView progress;
 
-    private ArrayList<String> imgURLs;
-
+    private RecyclerView recyclerView;
 
     public PSPage1() {
         // Required empty public constructor
@@ -66,6 +71,10 @@ public class PSPage1 extends FragmentWithBackAndNext implements View.OnClickList
         title = view.findViewById(R.id.title_edit);
         details = view.findViewById(R.id.details_edit);
         uploadBtn = view.findViewById(R.id.upload_btn);
+        recyclerView = view.findViewById(R.id.recview_images);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+        progress = view.findViewById(R.id.progress);
 
         uploadBtn.setOnClickListener(this);
 
@@ -82,12 +91,12 @@ public class PSPage1 extends FragmentWithBackAndNext implements View.OnClickList
             uploadImage();
         } else if (id == R.id.next_btn) {
             inputListener.onPage1Ready(title.getText().toString(),
-                    details.getText().toString(), price.getText().toString(), imgURLs);
+                    details.getText().toString(), price.getText().toString());
         }
     }
 
     interface PSPage1Listener {
-        void onPage1Ready(String title, String details, String amount, ArrayList<String> imgURLs);
+        void onPage1Ready(String title, String details, String amount);
     }
 
     private void uploadImage() {
@@ -96,5 +105,20 @@ public class PSPage1 extends FragmentWithBackAndNext implements View.OnClickList
 
     public interface OnUploadStartedListener {
         void onUploadStarted();
+    }
+
+    public void onImageUploaded(ArrayList<String> images) {
+        adapter = new ProductImagesAdapter(getContext(), images);
+        adapter.setImageRemovedListener(new ProductImagesAdapter.OnImageRemovedListener() {
+            @Override
+            public void onImageRemoved(int position) {
+                adapter.notifyItemRemoved(position);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+    }
+
+    public void onProgressUpdate(String p) {
+        progress.setText(p + "%");
     }
 }
