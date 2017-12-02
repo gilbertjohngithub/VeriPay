@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.berstek.veripay.MainActivity;
 import com.berstek.veripay.R;
-
 import com.berstek.veripay.data_access.UserDA;
 import com.berstek.veripay.models.Contact;
 import com.berstek.veripay.models.User;
@@ -75,7 +74,6 @@ public class HomeActivity extends AppCompatActivity
         payIDTxt = navHeader.findViewById(R.id.pay_id);
         ratingTxt = navHeader.findViewById(R.id.rating_txt);
         verifiedTxt = navHeader.findViewById(R.id.verified_txt);
-
 
         searchBtn.setOnClickListener(this);
 
