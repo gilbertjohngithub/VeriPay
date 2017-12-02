@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://C:\Users\Jarvis\AndroidStudioProjects\veripay\VeriPay.iml" filepath="C:\Users\Jarvis\AndroidStudioProjects\veripay\VeriPay.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VeriPay.iml" filepath="$PROJECT_DIR$/VeriPay.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://C:\Users\Jarvis\AndroidStudioProjects\veripay\app\app.iml" filepath="C:\Users\Jarvis\AndroidStudioProjects\veripay\app\app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/veripay.iml" filepath="$PROJECT_DIR$/veripay.iml" />
     </modules>
   </component>
 </project>
