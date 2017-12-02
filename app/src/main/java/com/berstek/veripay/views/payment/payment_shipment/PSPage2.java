@@ -87,7 +87,8 @@ public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickList
         lbc_express = view.findViewById(R.id.lbc_express);
         jrs_express = view.findViewById(R.id.jrs_express);
         courier_2go = view.findViewById(R.id.courier_2go);
-        selectedCourier = "lbc";
+        selectedCourier = "none";
+
 
         seekBar = view.findViewById(R.id.seekbar);
         seekbar_days = view.findViewById(R.id.seekbar_days);
@@ -159,6 +160,7 @@ public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickList
 
     private void setSelectedCourier(String newCourier, String oldCourier, TextView newCourierTextView) {
         TextView oldCourierTextView = null;
+
         if (!oldCourier.equals(newCourier)) {
             if (oldCourier.equals("lbc")) {
                 oldCourierTextView = lbc_express;
@@ -167,14 +169,17 @@ public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickList
             } else if (oldCourier.equals("2go")) {
                 oldCourierTextView = courier_2go;
             }
-            oldCourierTextView.setBackground(null);
-            oldCourierTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
-            oldCourierTextView.setTypeface(null, Typeface.ITALIC);
+            if(!oldCourier.equals("none")) {
+                oldCourierTextView.setBackground(null);
+                oldCourierTextView.setBackgroundTintList(getResources().getColorStateList(android.R.color.white));
+                oldCourierTextView.setTextColor(getResources().getColor(R.color.colorPrimary));
+                oldCourierTextView.setTypeface(null, Typeface.ITALIC);
+            }
 
             selectedCourier = newCourier;
+
             newCourierTextView.setBackgroundResource(R.drawable.oval);
-            newCourierTextView.setBackground(getResources().getDrawable(R.drawable.oval));
-            newCourierTextView.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+            newCourierTextView.setBackgroundTintList(getResources().getColorStateList(R.color.colorPrimary));
             newCourierTextView.setTextColor(getResources().getColor(android.R.color.white));
             newCourierTextView.setTypeface(null, Typeface.BOLD_ITALIC);
         }
