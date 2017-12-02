@@ -52,6 +52,7 @@ public class PaymentShipmentActivity extends AppCompatActivity
     private UploadTask uploadTask;
     private FileUploader uploader;
     private ArrayList<String> imgUrls;
+    private PSPage1 page1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,13 +78,13 @@ public class PaymentShipmentActivity extends AppCompatActivity
         //default courier
         transaction.setCourier(Transaction.Courier.LBC);
 
-        PSPage1 page1 = new PSPage1();
-        getSupportFragmentManager().beginTransaction().replace(R.id.activity_payment, page1).commit();
+        page1 = new PSPage1();
+        getSupportFragmentManager().beginTransaction().
+                replace(R.id.activity_payment, page1).commit();
     }
 
     @Override
-    public void onPage1Ready(String title, String details, String amount,
-                             ArrayList<String> imgURLs) {
+    public void onPage1Ready(String title, String details, String amount) {
         transaction.setTitle(title);
         transaction.setDetail(details);
         transaction.setAmount(Double.parseDouble(amount));
@@ -152,6 +153,10 @@ public class PaymentShipmentActivity extends AppCompatActivity
                             transaction.setImg_urls(imgUrls);
                             new TestDA().writeToConsole1(downloadURL.toString());
                             new TestDA().writeToConsole1(transaction.getImg_urls().size());
+
+                            if (page1 != null) {
+                                page1.onImageUploaded(transaction.getImg_urls());
+                            }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -165,6 +170,10 @@ public class PaymentShipmentActivity extends AppCompatActivity
                             long bytesTransferred = snapshot.getBytesTransferred();
                             double percentage = (bytesTransferred / size) * 100;
                             DecimalFormat decimalFormat = new DecimalFormat("0");
+
+                            if (page1 != null) {
+                                page1.onProgressUpdate(decimalFormat.format(percentage) + "%");
+                            }
                         }
                     });
 
@@ -182,4 +191,5 @@ public class PaymentShipmentActivity extends AppCompatActivity
     public void onUploadStarted() {
         uploader.openFileChooser(this);
     }
+
 }
