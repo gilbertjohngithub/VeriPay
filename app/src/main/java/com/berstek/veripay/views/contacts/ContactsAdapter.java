@@ -10,8 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.berstek.veripay.R;
+import com.berstek.veripay.data_access.UserDA;
 import com.berstek.veripay.models.Contact;
+import com.berstek.veripay.models.User;
+import com.berstek.veripay.utils.UserUtils;
 import com.berstek.veripay.views.user_profile.ProfileActivity;
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 
 import java.util.ArrayList;
@@ -22,11 +29,13 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ListHo
     private Context context;
     private ArrayList<Contact> contacts;
     private LayoutInflater inflater;
+    private UserDA userDA;
 
     public ContactsAdapter(Context context, ArrayList<Contact> contacts) {
         this.context = context;
         this.contacts = contacts;
         inflater = LayoutInflater.from(context);
+        userDA = new UserDA();
     }
 
     @Override
@@ -36,13 +45,26 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ListHo
     }
 
     @Override
-    public void onBindViewHolder(ListHolder holder, int position) {
+    public void onBindViewHolder(final ListHolder holder, int position) {
         Contact contact = contacts.get(position);
-        //eto pa dito ko gagalaw
 
-        //bale i set key mo muna yung contact sa contactsFragment para makuha mo yung UID
 
-        //tapos sa userDA, queryUserByUID ka
+
+        userDA.queryUserByUID(contact.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot child:dataSnapshot.getChildren()){
+                    User user = child.getValue(User.class);
+                    holder.name.setText(user.getFullName());
+                    Glide.with(context).load(user.getPhoto_url()).skipMemoryCache(true).into(holder.dp);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -72,6 +94,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.ListHo
                 }
             });
             rating = itemView.findViewById(R.id.rating_value);
+
+
 
         }
 

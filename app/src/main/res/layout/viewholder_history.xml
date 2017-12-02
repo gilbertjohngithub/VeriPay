@@ -52,9 +52,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        card_view:civ_border_color="#FF000000"
-        card_view:civ_border_width="0dp"
-        card_view:layout_constraintStart_toStartOf="parent"
+
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="8dp"

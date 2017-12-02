@@ -10,7 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.berstek.veripay.R;
+import com.berstek.veripay.data_access.ContactDA;
+import com.berstek.veripay.data_access.UserDA;
 import com.berstek.veripay.models.Contact;
+import com.berstek.veripay.utils.UserUtils;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
@@ -20,6 +27,7 @@ import java.util.ArrayList;
 public class ContactsFragment extends Fragment {
     private View view;
     private RecyclerView recyclerView;
+    private Query contactQuery, totalQuery;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -38,17 +46,45 @@ public class ContactsFragment extends Fragment {
     }
 
     private void loadContacts() {
-        //TODO fetch data from database
-        //dito bro yung dapat mong ayusin
-        ArrayList<Contact> contacts = new ArrayList<>();
-        Contact contact = new Contact();
-
-        for (int i = 0; i < 10; i++) {
-            contacts.add(contact);
-        }
-
-        ContactsAdapter adapter = new ContactsAdapter(getContext(), contacts);
+        final ArrayList<Contact> contacts = new ArrayList<>();
+        final ContactsAdapter adapter = new ContactsAdapter(getContext(), contacts);
         recyclerView.setAdapter(adapter);
+
+        ContactDA contactDA = new ContactDA();
+        UserDA userDA = new UserDA();
+
+        contactDA.queryuserContactsByUID(UserUtils.getUID()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Contact contact = new Contact();
+                contact.setKey(dataSnapshot.getKey());
+                contacts.add(contact);
+                adapter.notifyItemInserted(contacts.size()-1);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
     }
 
 }
