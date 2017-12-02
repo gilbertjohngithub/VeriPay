@@ -22,9 +22,6 @@ public class Transaction implements Serializable {
     private Courier courier;
     private ArrayList<String> img_urls;
 
-    public Transaction() {
-        img_urls = new ArrayList<>();
-    }
 
     public enum ShippingType {
         DOOR, PICKUP

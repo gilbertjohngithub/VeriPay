@@ -22,6 +22,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.UploadTask;
 
 
+import junit.framework.Test;
+
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.io.FileNotFoundException;
@@ -70,6 +72,7 @@ public class PaymentShipmentActivity extends AppCompatActivity
         //default due date is the same day the payment is made
         transaction.setExpiration_date(transaction.getCreation_date());
         transaction.setReceiver_uid(receiver_uid);
+        transaction.setImg_urls(imgUrls);
         transaction.setStatus(Transaction.Status.AWAITING_ACCEPTANCE);
         //default courier
         transaction.setCourier(Transaction.Courier.LBC);
@@ -84,7 +87,6 @@ public class PaymentShipmentActivity extends AppCompatActivity
         transaction.setTitle(title);
         transaction.setDetail(details);
         transaction.setAmount(Double.parseDouble(amount));
-        transaction.setImg_urls(imgURLs);
         PSPage2 page2 = new PSPage2();
         Bundle bundle = new Bundle();
         ArrayList transactions = new ArrayList<>();
@@ -146,7 +148,10 @@ public class PaymentShipmentActivity extends AppCompatActivity
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot snapshot) {
                             @SuppressWarnings("VisibleForTests") Uri downloadURL = snapshot.getDownloadUrl();
-                            transaction.getImg_urls().add(downloadURL.toString());
+                            imgUrls.add(downloadURL.toString());
+                            transaction.setImg_urls(imgUrls);
+                            new TestDA().writeToConsole1(downloadURL.toString());
+                            new TestDA().writeToConsole1(transaction.getImg_urls().size());
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -160,8 +165,6 @@ public class PaymentShipmentActivity extends AppCompatActivity
                             long bytesTransferred = snapshot.getBytesTransferred();
                             double percentage = (bytesTransferred / size) * 100;
                             DecimalFormat decimalFormat = new DecimalFormat("0");
-
-
                         }
                     });
 

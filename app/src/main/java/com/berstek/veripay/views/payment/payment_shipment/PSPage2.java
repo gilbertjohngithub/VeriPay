@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -38,7 +39,7 @@ import java.util.Date;
  */
 public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickListener,
         SeekBar.OnSeekBarChangeListener, RadioGroup.OnCheckedChangeListener,
-        TextWatcher {
+        TextWatcher, ProductImagesAdapter.OnImageRemovedListener {
     private TextView amount, product_name,
             product_details, lbc_express,
             jrs_express, courier_2go, seekbar_days;
@@ -51,10 +52,12 @@ public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickList
     private UserDA userDA;
     private RadioGroup radioGroup;
     private String selectedCourier;
+    private ProductImagesAdapter adapter;
 
     public PSPage2() {
         // Required empty public constructor
     }
+
 
     public interface OnPage2ReadyListener {
         public void onPage2Ready(Transaction transaction);
@@ -136,6 +139,17 @@ public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickList
 
             }
         });
+
+        new TestDA().writeToConsole1("IMAGES: " + transaction.getImg_urls().size());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+
+        adapter = new ProductImagesAdapter(getContext(),
+                transaction.getImg_urls());
+
+        adapter.setImageRemovedListener(this);
+
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -208,9 +222,6 @@ public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickList
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
-
-        new TestDA().writeToConsole1("CHECK CHANGED");
-
         if (i == R.id.pickup) {
             new TestDA().writeToConsole1("DOOR");
             transaction.setTransaction_type(Transaction.ShippingType.PICKUP);
@@ -233,5 +244,11 @@ public class PSPage2 extends FragmentWithBackAndNext implements View.OnClickList
     @Override
     public void afterTextChanged(Editable editable) {
         transaction.setAddress(address.getText().toString());
+    }
+
+    @Override
+    public void onImageRemoved(int position) {
+        transaction.getImg_urls().remove(position);
+        adapter.notifyItemRemoved(position);
     }
 }
