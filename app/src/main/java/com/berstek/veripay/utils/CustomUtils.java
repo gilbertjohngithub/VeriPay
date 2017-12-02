@@ -33,4 +33,8 @@ public class CustomUtils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM dd, yyyy");
         return dateFormat.format(new Date(d));
     }
+
+    public static String getGoogleAuthKey() {
+        return "766287631612-782nk8iurq5lu152tc2psqqvikbi39l0.apps.googleusercontent.com";
+    }
 }
