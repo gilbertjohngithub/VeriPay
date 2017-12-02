@@ -32,8 +32,7 @@ public class TransactionsFragment extends Fragment implements View.OnClickListen
     private View view;
     private RecyclerView recyclerView;
     private ImageView cashin, cashout, send, receive;
-    private ReceivedTransactionsChildListener rc;
-    private SentTransactionsChildListener sc;
+    private TransactionsChildListener rc;
     private Query sentTransationsQuery, receivedTransactionsQuery;
 
     public TransactionsFragment() {
@@ -70,25 +69,10 @@ public class TransactionsFragment extends Fragment implements View.OnClickListen
         recyclerView.setAdapter(adapter);
 
         TransactionDA transactionDA = new TransactionDA();
-
-        rc = new ReceivedTransactionsChildListener();
-        sc = new SentTransactionsChildListener();
+//
+        rc = new TransactionsChildListener();
 
         rc.setChildEventCallback(new ChildEventCallback() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot) {
-                Transaction transaction = dataSnapshot.getValue(Transaction.class);
-                transactions.add(transaction);
-                adapter.notifyItemInserted(transactions.size() - 1);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot) {
-
-            }
-        });
-
-        sc.setChildEventCallback(new ChildEventCallback() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot) {
                 Transaction transaction = dataSnapshot.getValue(Transaction.class);
@@ -107,7 +91,7 @@ public class TransactionsFragment extends Fragment implements View.OnClickListen
         sentTransationsQuery.addChildEventListener(rc);
 
         receivedTransactionsQuery = transactionDA.queryTransactionsByReceiver(UserUtils.getUID());
-        receivedTransactionsQuery.addChildEventListener(sc);
+        receivedTransactionsQuery.addChildEventListener(rc);
     }
 
     @Override
@@ -128,17 +112,17 @@ public class TransactionsFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        sentTransationsQuery.removeEventListener(sc);
-        receivedTransactionsQuery.removeEventListener(sc);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        sentTransationsQuery.removeEventListener(sc);
-        receivedTransactionsQuery.removeEventListener(sc);
-    }
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        sentTransationsQuery.removeEventListener(sc);
+//        receivedTransactionsQuery.removeEventListener(sc);
+//    }
+//
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//        sentTransationsQuery.removeEventListener(sc);
+//        receivedTransactionsQuery.removeEventListener(sc);
+//    }
 }
