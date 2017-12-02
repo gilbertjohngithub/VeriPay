@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@color/colorPrimary"
-    >
+    tools:context="com.berstek.paywiz.views.account_setup.WelcomeFragment">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -18,7 +18,7 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_placeholder"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"/>//
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
