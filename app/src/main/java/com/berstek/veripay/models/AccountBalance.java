@@ -6,9 +6,9 @@ public class AccountBalance {
 
     public void pushTransaction(TransactionHistory t) {
         if (t.getType() == TransactionHistory.CreditDebit.CREDIT)
-            accountBalance += t.getAmount();
-        else
             accountBalance -= t.getAmount();
+        else
+            accountBalance += t.getAmount();
     }
 
     public double getAccountBalance() {

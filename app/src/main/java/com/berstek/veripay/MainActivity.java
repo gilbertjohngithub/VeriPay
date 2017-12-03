@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity implements LoginSignupFragme
 
         getSupportActionBar().hide();
 
-        try {
-            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        } catch (Exception e) {}
+//        try {
+//            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        } catch (Exception e) {}
 
         if (auth.getCurrentUser() == null)
             //redirect to login page
