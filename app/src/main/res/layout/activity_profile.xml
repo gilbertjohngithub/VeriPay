@@ -33,7 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/emma"
+                    android:src="@drawable/ic_avatar"
                     android:tint="@color/custom_blur_tint" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -44,7 +44,7 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:src="@drawable/emma"
+                    android:src="@drawable/ic_avatar"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

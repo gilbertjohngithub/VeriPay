@@ -119,6 +119,6 @@ public class PSPage1 extends FragmentWithBackAndNext
     }
 
     public void onProgressUpdate(String p) {
-        progress.setText(p + "%");
+        progress.setText(p);
     }
 }
