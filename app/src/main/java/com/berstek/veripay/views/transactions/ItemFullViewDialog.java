@@ -83,6 +83,7 @@ public class ItemFullViewDialog extends DialogFragment implements View.OnClickLi
 
 
         product_name.setText(transaction.getTitle());
+        details.setText(transaction.getDetail());
 
         switch (transaction.getStatus()) {
             case AWAITING_SHIPMENT:

@@ -26,6 +26,7 @@ import com.berstek.veripay.utils.UserUtils;
 import com.berstek.veripay.views.parent_layouts.CustomDialogFragment;
 import com.berstek.veripay.views.payment.PaymentTypeActivity;
 import com.berstek.veripay.views.payment.payment_shipment.PSConfirmationDialogFragment;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
@@ -108,11 +109,24 @@ public class TransactionsFragment extends Fragment implements View.OnClickListen
 
         final TransactionDA transactionDA = new TransactionDA();
 //
-        rc = new TransactionsChildListener();
+//        rc = new TransactionsChildListener();
+//
+//        rc.setChildEventCallback(new ChildEventCallback() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot) {
+//
+//            }
+//        });
 
-        rc.setChildEventCallback(new ChildEventCallback() {
+        //query sent and received transactions from the database and add listeners to them
+      transactionDA.queryTransactionsBySender(UserUtils.getUID()).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Transaction transaction = dataSnapshot.getValue(Transaction.class);
                 transaction.setKey(dataSnapshot.getKey());
                 transactions.add(transaction);
@@ -120,17 +134,57 @@ public class TransactionsFragment extends Fragment implements View.OnClickListen
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+//        sentTransationsQuery.addChildEventListener(rc);
 
-        //query sent and received transactions from the database and add listeners to them
-        sentTransationsQuery = transactionDA.queryTransactionsBySender(UserUtils.getUID());
-        sentTransationsQuery.addChildEventListener(rc);
+        transactionDA.queryTransactionsByReceiver(UserUtils.getUID()).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Transaction transaction = dataSnapshot.getValue(Transaction.class);
+                transaction.setKey(dataSnapshot.getKey());
+                transactions.add(transaction);
+                adapter.notifyItemInserted(transactions.size() - 1);
+            }
 
-        receivedTransactionsQuery = transactionDA.queryTransactionsByReceiver(UserUtils.getUID());
-        receivedTransactionsQuery.addChildEventListener(rc);
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+//        receivedTransactionsQuery.addChildEventListener(rc);
 
         adapter.setTransactionClickedListener(new TransactionsAdapter.OnTransactionClickedListener() {
             @Override
