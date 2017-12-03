@@ -1,9 +1,24 @@
 package com.berstek.veripay.models;
 
+import com.google.firebase.database.Exclude;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Transaction implements Serializable {
+
+    @Exclude
+    private String key;
+
+    @Exclude
+    public String getKey() {
+        return key;
+    }
+
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     //required attribs
     private String title, detail;
@@ -29,7 +44,7 @@ public class Transaction implements Serializable {
     }
 
     public enum Status {
-        AWAITING_ACCEPTANCE, AWAITING_SHIPMENT, COMPLETED
+        AWAITING_ACCEPTANCE, AWAITING_SHIPMENT, COMPLETED, DECLINED
     }
 
     public enum Courier {

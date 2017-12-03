@@ -5,7 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
+import com.berstek.veripay.data_access.AccountBalanceDA;
+import com.berstek.veripay.models.TransactionHistory;
 import com.berstek.veripay.models.User;
+import com.berstek.veripay.utils.UserUtils;
 import com.berstek.veripay.views.account_setup.LoginSignupFragment;
 import com.berstek.veripay.views.home.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +35,14 @@ public class MainActivity extends AppCompatActivity implements LoginSignupFragme
             getSupportFragmentManager().beginTransaction().
                     add(R.id.main_container, new LoginSignupFragment()).commit();
         else {
+
+//            TransactionHistory transactionHistory = new TransactionHistory();
+//            transactionHistory.setAmount(20000.00);
+//            transactionHistory.setType(TransactionHistory.CreditDebit.DEBIT);
+//
+//            AccountBalanceDA accountBalanceDA = new AccountBalanceDA();
+//            accountBalanceDA.pushTransaction(transactionHistory, UserUtils.getUID());
+
             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
             startActivity(intent);
         }

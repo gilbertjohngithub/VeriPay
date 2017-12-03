@@ -114,6 +114,7 @@ public class TransactionsFragment extends Fragment implements View.OnClickListen
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot) {
                 Transaction transaction = dataSnapshot.getValue(Transaction.class);
+                transaction.setKey(dataSnapshot.getKey());
                 transactions.add(transaction);
                 adapter.notifyItemInserted(transactions.size() - 1);
             }

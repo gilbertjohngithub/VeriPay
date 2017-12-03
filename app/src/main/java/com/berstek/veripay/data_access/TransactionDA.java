@@ -17,6 +17,10 @@ public class TransactionDA extends DA {
                 setValue(status);
     }
 
+    public void updateFullTransaction(String transactionUID, Transaction transaction) {
+        rootRef.child(node).child(transactionUID).setValue(transaction);
+    }
+
     public Query queryTransactionsBySender(String senderUID) {
         return rootRef.child(node).orderByChild("sender_uid").equalTo(senderUID);
     }
