@@ -13,8 +13,6 @@ import com.berstek.veripay.R;
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFragment extends Fragment {
-
-
     public HistoryFragment() {
         // Required empty public constructor
     }
