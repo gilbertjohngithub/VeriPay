@@ -54,7 +54,11 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         Transaction transaction = transactions.get(position);
 
         holder.product_name.setText(transaction.getTitle());
-        imageUtils.blurImage((Activity) context, "https://cnet1.cbsistatic.com/img/tfZ_Yy-BLrVitMGK7rODLhzxha4=/830x467/2017/10/31/ca251fb7-a46f-4934-8ab2-ddf6639f32ea/iphone-x-charging-01.jpg", holder.productImg, false);
+        if (transaction.getImg_urls() != null) {
+            String url = transaction.getImg_urls().get(0);
+            if (url != null)
+                imageUtils.blurImage((Activity) context, url, holder.productImg, false);
+        }
         holder.name.setText(transaction.getTitle());
         holder.transaction_code.setText(transaction.getTransaction_code());
         holder.transaction_date.setText(CustomUtils.parseDateMMddYYYY(transaction.getCreation_date()));
@@ -133,7 +137,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
         return transactions.size();
     }
 
-    class ListHolder extends RecyclerView.ViewHolder {
+    class ListHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView dp, productImg;
         private TextView product_name, status, name,
                 identity, price, courier, transaction_date,
@@ -152,7 +156,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
             rating = itemView.findViewById(R.id.rating_textview);
             price = itemView.findViewById(R.id.price_textview);
             courier = itemView.findViewById(R.id.courier_value);
-            transaction_date = itemView.findViewById(R.id.transaction_date_value);
+            transaction_date = itemView.findViewById(R.id.date);
             date_shipped = itemView.findViewById(R.id.shipped_date_value);
 
             dp.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +166,23 @@ public class TransactionsAdapter extends RecyclerView.Adapter<TransactionsAdapte
                     context.startActivity(intent);
                 }
             });
+
+            itemView.setOnClickListener(this);
         }
+
+        @Override
+        public void onClick(View view) {
+            transactionClickedListener.onTransactionClicked(getAdapterPosition());
+        }
+    }
+
+    public interface OnTransactionClickedListener {
+        void onTransactionClicked(int position);
+    }
+
+    private OnTransactionClickedListener transactionClickedListener;
+
+    public void setTransactionClickedListener(OnTransactionClickedListener transactionClickedListener) {
+        this.transactionClickedListener = transactionClickedListener;
     }
 }

@@ -10,9 +10,10 @@ public class Transaction implements Serializable {
     private String sender_uid, receiver_uid;
     private long creation_date;
     private double amount;
+    private String transaction_code;
+
 
     //optional attribs for payment for shipment
-    private String transaction_code;
     private double trans_charge, percent_charge;
     private long expiration_date, accepted_date, shipment_date;
     private String address;
