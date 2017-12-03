@@ -2,6 +2,7 @@ package com.berstek.veripay.views.transactions;
 
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.support.v4.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -14,10 +15,19 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.berstek.veripay.MainActivity;
 import com.berstek.veripay.R;
+import com.berstek.veripay.data_access.TransactionDA;
+import com.berstek.veripay.data_access.UserDA;
 import com.berstek.veripay.models.Transaction;
+import com.berstek.veripay.models.User;
 import com.berstek.veripay.utils.CustomImageUtils;
 import com.berstek.veripay.utils.CustomUtils;
+import com.berstek.veripay.utils.UserUtils;
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -36,6 +46,10 @@ public class ItemFullViewDialog extends DialogFragment implements View.OnClickLi
             username, user_type, number, address,
             transaction_option, due_date, details;
     private ImageView back_img2;
+
+    private ImageView cancel, accept, userImage;
+
+    private TransactionDA transactionDA;
 
     public ItemFullViewDialog() {
         // Required empty public constructor
@@ -63,6 +77,10 @@ public class ItemFullViewDialog extends DialogFragment implements View.OnClickLi
         due_date = view.findViewById(R.id.due_date);
         details = view.findViewById(R.id.details);
         back_img2 = view.findViewById(R.id.back_img2);
+        cancel = view.findViewById(R.id.cancel);
+        accept = view.findViewById(R.id.accept);
+        userImage = view.findViewById(R.id.user_image);
+
 
         product_name.setText(transaction.getTitle());
 
@@ -104,8 +122,28 @@ public class ItemFullViewDialog extends DialogFragment implements View.OnClickLi
             if (transaction.getImg_urls().get(0) != null)
                 customImageUtils.blurImage(getActivity(), transaction.getImg_urls().get(0),
                         transaction_image, true);
-
         }
+
+        if (transaction.getImg_urls() != null && transaction.getImg_urls().get(0) != null) {
+            Glide.with(getContext()).load(transaction.getImg_urls().get(0)).skipMemoryCache(true).into(transaction_image);
+            transaction_image.setColorFilter(Color.rgb(123, 123, 123),
+                    android.graphics.PorterDuff.Mode.MULTIPLY);
+        }
+
+        new UserDA().queryUserByUID(UserUtils.getUID()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    User user = child.getValue(User.class);
+                    Glide.with(getContext()).load(user.getPhoto_url()).skipMemoryCache(true).into(userImage);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         back_img2.setOnClickListener(this);
 
@@ -133,7 +171,29 @@ public class ItemFullViewDialog extends DialogFragment implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        onBackPressedListener.onBackPressed();
+        int id = view.getId();
+
+        if (id == R.id.back_img2) {
+            onBackPressedListener.onBackPressed();
+        } else if (id == R.id.cancel) {
+            updateTransactionStatus(Transaction.Status.DECLINED);
+            this.dismiss();
+
+        } else if (id == R.id.accept) {
+            updateTransactionStatus(Transaction.Status.AWAITING_SHIPMENT);
+        }
+
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    private void updateTransactionStatus(Transaction.Status status) {
+        transaction.setAccepted_date(System.currentTimeMillis());
+        transaction.setStatus(status);
+
+        transactionDA.updateFullTransaction(transaction.getKey(), transaction);
     }
 
     public interface OnBackPressedListener {
